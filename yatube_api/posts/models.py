@@ -1,3 +1,4 @@
+"""Модели приложения yatube."""
 from django.contrib.auth import get_user_model
 from django.db import models
 from yatube_api.settings import (
@@ -10,6 +11,7 @@ User = get_user_model()
 
 class Group(models.Model):
     """Модель группы."""
+
     title = models.CharField(
         'Название группы',
         max_length=GROUP_TITLE_MAX_LENGTH
@@ -33,6 +35,7 @@ class Group(models.Model):
 
 class Post(models.Model):
     """Модель поста."""
+
     text = models.TextField()
     pub_date = models.DateTimeField(
         'Дата публикации',
@@ -64,6 +67,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     """Модель комментария."""
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -90,6 +94,7 @@ class Comment(models.Model):
 
 class Follow(models.Model):
     """Модель подписок."""
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -108,3 +113,9 @@ class Follow(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'following'],
+                name='user_follow'
+            )
+        ]
