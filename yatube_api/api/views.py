@@ -5,7 +5,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 
 from posts.models import (
-    Post, Group
+    Comment, Post, Group
 )
 from .permissions import IsAuthorOrReadOnly
 from .viewsets import CreateListViewSet
@@ -57,15 +57,15 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = (IsAuthorOrReadOnly,)
 
-    def get_object(self):
+    def get_post(self):
         return get_object_or_404(
             Post, pk=self.kwargs['post_id']
         )
 
     def get_queryset(self):
-        return self.get_object().comments.all()
+        return Comment.objects.filter(post=self.get_post())
 
     def perform_create(self, serializer):
         serializer.save(
-            author=self.request.user, post=self.get_object()
+            author=self.request.user, post=self.get_post()
         )

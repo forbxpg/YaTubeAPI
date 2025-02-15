@@ -1,8 +1,11 @@
 """Модуль, содержащий классы разрешений для API."""
-from rest_framework import permissions
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+    SAFE_METHODS
+)
 
 
-class IsAuthorOrReadOnly(permissions.IsAuthenticatedOrReadOnly):
+class IsAuthorOrReadOnly(IsAuthenticatedOrReadOnly):
     """
     Класс, определяющий разрешения на изменение
     контента только для автора этого контента.
@@ -14,8 +17,7 @@ class IsAuthorOrReadOnly(permissions.IsAuthenticatedOrReadOnly):
         Возвращает True, если пользователь является автором
         или метод запроса входит в список безопасных.
         """
-
         return (
-            request.method in permissions.SAFE_METHODS
+            request.method in SAFE_METHODS
             or obj.author == request.user
         )
