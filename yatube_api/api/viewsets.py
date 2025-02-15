@@ -6,4 +6,3 @@ class CreateListViewSet(
     viewsets.GenericViewSet
 ):
     """Базовый вьюсет для создания и просмотра моделей."""
-    pass
