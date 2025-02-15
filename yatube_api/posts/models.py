@@ -117,5 +117,13 @@ class Follow(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'following'],
                 name='user_follow'
+            ),
+
+            # Дополнительная проверка на уровне БД,
+            # чтобы не было возможности подписаться на себя.
+            models.CheckConstraint(
+                check=~models.Q(user=models.F('following')),
+                name='no_self_follow',
+                violation_error_message='Нельзя подписаться на самого себя'
             )
         ]

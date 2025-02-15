@@ -10,20 +10,6 @@ from posts.models import (
 )
 
 
-class ImageField(serializers.ImageField):
-    """Класс для работы с картинками при помощи Base64."""
-
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith('data:image'):
-            format, imgstr = data.split(';base64,')
-            ext = format.split('/')[-1]
-            data = ContentFile(
-                base64.b64decode(imgstr),
-                name='temp.' + ext
-            )
-        return super().to_internal_value(data)
-
-
 class PostSerializer(serializers.ModelSerializer):
     """Сериализатор модели поста."""
 
@@ -31,7 +17,6 @@ class PostSerializer(serializers.ModelSerializer):
         slug_field='username',
         read_only=True
     )
-    image = ImageField(required=False, allow_null=True)
 
     class Meta:
         fields = (

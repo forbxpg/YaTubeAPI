@@ -7,7 +7,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from posts.models import (
     Post, Group
 )
-from .permissions import OnlyAuthorPermission
+from .permissions import IsAuthorOrReadOnly
+from .viewsets import CreateListViewSet
 from .serializers import (
     CommentSerializer, FollowSerializer,
     GroupSerializer, PostSerializer
@@ -27,7 +28,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (OnlyAuthorPermission,)
+    permission_classes = (IsAuthorOrReadOnly,)
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
@@ -36,10 +37,7 @@ class PostViewSet(viewsets.ModelViewSet):
         )
 
 
-class FollowViewSet(
-    mixins.CreateModelMixin, mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):
+class FollowViewSet(CreateListViewSet):
     """Вьюсет для модели Follow."""
 
     serializer_class = FollowSerializer
@@ -57,18 +55,17 @@ class CommentViewSet(viewsets.ModelViewSet):
     """Вьюсет для модели Comment."""
 
     serializer_class = CommentSerializer
-    permission_classes = (OnlyAuthorPermission,)
+    permission_classes = (IsAuthorOrReadOnly,)
+
+    def get_object(self):
+        return get_object_or_404(
+            Post, pk=self.kwargs['post_id']
+        )
 
     def get_queryset(self):
-        post = get_object_or_404(
-            Post, pk=self.kwargs['post_id']
-        )
-        return post.comments.all()
+        return self.get_object().comments.all()
 
     def perform_create(self, serializer):
-        post = get_object_or_404(
-            Post, pk=self.kwargs['post_id']
-        )
         serializer.save(
-            author=self.request.user, post=post
+            author=self.request.user, post=self.get_object()
         )
