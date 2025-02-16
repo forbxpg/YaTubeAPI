@@ -1,6 +1,7 @@
 """Модели приложения yatube."""
 from django.contrib.auth import get_user_model
 from django.db import models
+
 from yatube_api.settings import (
     GROUP_TITLE_MAX_LENGTH, GROUP_SLUG_MAX_LENGTH
 )

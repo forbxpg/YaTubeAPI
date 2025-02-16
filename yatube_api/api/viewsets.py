@@ -1,3 +1,4 @@
+"""Базовые вьюсеты приложения."""
 from rest_framework import viewsets, mixins
 
 

@@ -7,7 +7,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from posts.models import (
     Comment, Post, Group
 )
-from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAuthorAuthenticatedOrReadOnly
 from .viewsets import CreateListViewSet
 from .serializers import (
     CommentSerializer, FollowSerializer,
@@ -28,7 +28,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthorAuthenticatedOrReadOnly,)
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
@@ -55,7 +55,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """Вьюсет для модели Comment."""
 
     serializer_class = CommentSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthorAuthenticatedOrReadOnly,)
 
     def get_post(self):
         return get_object_or_404(
@@ -63,7 +63,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         )
 
     def get_queryset(self):
-        return Comment.objects.filter(post=self.get_post())
+        return Comment.objects.select_related('post').filter(
+            post=self.get_post()
+        )
 
     def perform_create(self, serializer):
         serializer.save(

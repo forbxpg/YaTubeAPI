@@ -5,7 +5,9 @@ from rest_framework.permissions import (
 )
 
 
-class IsAuthorOrReadOnly(IsAuthenticatedOrReadOnly):
+class IsAuthorAuthenticatedOrReadOnly(
+    IsAuthenticatedOrReadOnly
+):
     """Класс разрешения только для автора объекта."""
 
     def has_object_permission(self, request, view, obj):
