@@ -120,6 +120,6 @@ class Follow(models.Model):
             ),
             models.CheckConstraint(
                 check=~models.Q(user=models.F('following')),
-                name='no_self_follow'
+                name='no_self_follow',
             )
         ]

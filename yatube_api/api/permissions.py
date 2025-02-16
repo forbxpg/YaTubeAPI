@@ -6,10 +6,7 @@ from rest_framework.permissions import (
 
 
 class IsAuthorOrReadOnly(IsAuthenticatedOrReadOnly):
-    """
-    Класс, определяющий разрешения на изменение
-    контента только для автора этого контента.
-    """
+    """Класс разрешения только для автора объекта."""
 
     def has_object_permission(self, request, view, obj):
         """Проверка на авторство объекта.
