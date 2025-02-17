@@ -63,9 +63,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         )
 
     def get_queryset(self):
-        return Comment.objects.select_related('post').filter(
-            post=self.get_post()
-        )
+        return self.get_post().comments.all()
 
     def perform_create(self, serializer):
         serializer.save(
