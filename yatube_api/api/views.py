@@ -5,7 +5,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 
 from posts.models import (
-    Comment, Post, Group
+    Post, Group
 )
 from .permissions import IsAuthorAuthenticatedOrReadOnly
 from .viewsets import CreateListViewSet
