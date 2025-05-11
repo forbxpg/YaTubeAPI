@@ -1,4 +1,4 @@
-# 🛠️ _`RESTful API` к социальной сети Yatube_
+# 🛠️ _`RESTful API` к социальной сети
 
 ![Django REST Framework](https://img.shields.io/badge/Django%20REST%20Framework-3.15.2-green) ![Python](https://img.shields.io/badge/Python-3.12-blue) ![Django](https://img.shields.io/badge/Django-5.1.6-darkgreen)
 
